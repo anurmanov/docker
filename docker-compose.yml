@@ -1,0 +1,61 @@
+version: "3.7"
+services:
+  web:
+    build: ./web/
+    image: wsgi:gunicorn
+    hostname: msc_wsgi
+    container_name: msc_wsgi
+    networks: 
+      - local_network
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./web/celery/log:/tmp/celery.log
+      - ./web/log:/var/log/gunicorn
+      - /var/www/medsmartcom:/var/www/medsmartcom
+      - ./web/init/gunicorn.py:/etc/gunicorn/gunicorn.py
+
+  nginx:
+    image: nginx:latest
+    hostname: msc_nginx
+    container_name: msc_nginx
+    network_mode: host
+    depends_on:
+      - web
+    volumes:
+      - ./nginx/log:/var/log/nginx
+      - /var/www/medsmartcom:/var/www/medsmartcom
+      - ./nginx/init/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80" 
+
+  postgres:
+    build: ./postgres/
+    image: postgres:medsmartcom
+    hostname: msc_postgres
+    container_name: msc_postgres
+    networks: 
+      - local_network
+    volumes:
+      - msc_postgres_pgdata:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d
+      - ./postgres/log:/log
+
+  redis:
+    build: ./redis/
+    image: redis:medsmartcom
+    hostname: msc_redis
+    container_name: msc_redis
+    networks: 
+      - local_network
+    volumes:
+      - ./redis/log:/log
+      - ./redis/data:/data
+      - ./redis/redis.conf:/usr/local/redis/redis.conf
+
+networks:
+  local_network:
+volumes:
+  msc_postgres_pgdata: 
+
