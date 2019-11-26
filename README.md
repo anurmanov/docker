@@ -1,6 +1,6 @@
 The system is deployed on 4 containers controlled via The Docker Compose subsystem.
-The Docker Compose working directory consists of 4 parts: 
-    - postgres;
+The Docker Compose working directory consists of 4 parts:
+- postgres;
     
     - redis;
     
