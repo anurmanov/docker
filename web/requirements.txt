@@ -2,7 +2,7 @@ amqp==2.5.0
 billiard==3.6.0.0
 celery==4.3.0
 decorator==4.4.0
-Django==2.1.7
+Django==2.2.10
 django-redis==4.10.0
 django-taggit==1.1.0
 django-tinymce4-lite==1.7.4
